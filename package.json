@@ -9,6 +9,9 @@
     "test": "./node_modules/.bin/jest"
   },
   "dependencies": {
+    "bluebird": "^3.5.4",
+    "chance": "^1.0.18",
+    "lodash": "^4.17.11",
     "orbs-client-sdk": "https://github.com/orbs-network/orbs-client-sdk-javascript#master"
   },
   "devDependencies": {

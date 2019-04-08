@@ -1,4 +1,6 @@
 
+const Promise = require("bluebird");
+const _ = require("lodash");
 const Orbs = require(`${__dirname}/../orbs-client-sdk-javascript/dist/index.js`);
 
 function verifyResponse(response) {
@@ -31,6 +33,23 @@ class Conversation {
         verifyResponse(response);
 
         return JSON.parse(Buffer.from(response.outputArguments[0].value).toString());
+    }
+
+    async scroll(channel, from, callback) {
+        let firstItem = from;
+        while (true) {
+            try {
+                const messages = await this.getMessagesForChannel(channel, firstItem, firstItem+50);
+                if (!_.isEmpty(messages)) {
+                    callback(messages);
+                    firstItem = _.last(messages).ID + 1;
+                }
+            } catch (e) {
+                console.log(e);
+            }
+
+            await Promise.delay(2000);
+        }
     }
 }
 

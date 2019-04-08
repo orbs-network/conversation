@@ -38,14 +38,19 @@ func sendMessageToChannel(channel string, message string) (messageID uint64) {
 
 func getMessagesForChannel(channel string, from uint64, to uint64) []byte {
 	count := state.ReadUint64(COUNTER_KEY)
+	max := to
+
+	if to > count {
+		max = count
+	}
 
 	var messages []*Message
-	for i := from; i <= to; i++ {
+	for i := from; i <= max; i++ {
 		messages = append(messages, &Message{
-			count,
-			state.ReadUint64([]byte("t_" + strconv.FormatUint(count, 10))),
-			state.ReadBytes([]byte("a_" + strconv.FormatUint(count, 10))),
-			state.ReadString([]byte("m_" + strconv.FormatUint(count, 10))),
+			i,
+			state.ReadUint64([]byte("t_" + strconv.FormatUint(i, 10))),
+			state.ReadBytes([]byte("a_" + strconv.FormatUint(i, 10))),
+			state.ReadString([]byte("m_" + strconv.FormatUint(i, 10))),
 		})
 	}
 

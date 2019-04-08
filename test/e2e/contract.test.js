@@ -64,6 +64,6 @@ describe("E2E nodejs", () => {
     expect(message.ID).toEqual(1);
     expect(message.Message).toEqual("what's up?");
     expect(message).toHaveProperty("Timestamp");
-    expect(message).toHaveProperty("Author");
+    expect(message).toHaveProperty("Author");    
   });
 });
