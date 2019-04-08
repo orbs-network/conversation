@@ -9,6 +9,7 @@
 const Orbs = require("../../../orbs-client-sdk-javascript/dist/index.js");
 const GammaDriver = require("./gamma-driver");
 const fs = require("fs");
+const { Conversation } = require("../../index");
 
 const VIRTUAL_CHAIN_ID = 42; // gamma-cli config default
 describe("E2E nodejs", () => {
@@ -46,28 +47,19 @@ describe("E2E nodejs", () => {
     expect(deployResponse.executionResult).toEqual("SUCCESS");
     expect(deployResponse.transactionStatus).toEqual("COMMITTED");
 
-    const [sendMessageTx] = client.createTransaction(sender.publicKey, sender.privateKey, "testContract", "sendMessageToChannel", [Orbs.argString("defaultChannel"), Orbs.argString("what's up?")]);
+    const c = new Conversation({
+      endpoint,
+      virtualChainId: VIRTUAL_CHAIN_ID,
+      contractName: "testContract"
+    }, {
+      publicKey: sender.publicKey,
+      privateKey: sender.privateKey
+    })
 
-    // send the transaction
-    const sendMessageResponse = await client.sendTransaction(sendMessageTx);
-    console.log("sendMessageResponse:");
-    console.log(sendMessageResponse);
-    expect(sendMessageResponse.requestStatus).toEqual("COMPLETED");
-    expect(sendMessageResponse.executionResult).toEqual("SUCCESS");
-    expect(sendMessageResponse.transactionStatus).toEqual("COMMITTED");
+    const messageId = await c.sendMessageToChannel("defaultChannel", "what's up?");
+    expect(messageId).toEqual(BigInt(1));
 
-    const [getMessagesTx] = client.createTransaction(sender.publicKey, sender.privateKey, "testContract", "getMessagesForChannel", [Orbs.argString("defaultChannel"), Orbs.argUint64(1), Orbs.argUint64(1)]);
-
-    // send the transaction
-    const getMessagesResponse = await client.sendTransaction(getMessagesTx);
-    console.log("getMessagesResponse:");
-    console.log(getMessagesResponse);
-    expect(getMessagesResponse.requestStatus).toEqual("COMPLETED");
-    expect(getMessagesResponse.executionResult).toEqual("SUCCESS");
-    expect(getMessagesResponse.transactionStatus).toEqual("COMMITTED");
-
-    console.log(getMessagesResponse.outputArguments)
-    const message = JSON.parse(Buffer.from(getMessagesResponse.outputArguments[0].value).toString())[0];
+    const [message] = await c.getMessagesForChannel("defaultChannel", 1, 1);
     console.log(message);
     expect(message.ID).toEqual(1);
     expect(message.Message).toEqual("what's up?");
