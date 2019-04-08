@@ -1,0 +1,17 @@
+{
+  "name": "conversation",
+  "version": "0.0.1",
+  "description": "Chat app on top of ORBS blockchain",
+  "main": "index.js",
+  "author": "Kirill Maksimov <kirill@orbs.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "./node_modules/.bin/jest"
+  },
+  "dependencies": {
+    "orbs-client-sdk": "https://github.com/orbs-network/orbs-client-sdk-javascript#master"
+  },
+  "devDependencies": {
+    "jest": "^24.7.1"
+  }
+}
