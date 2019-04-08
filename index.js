@@ -1,7 +1,7 @@
 
 const Promise = require("bluebird");
 const _ = require("lodash");
-const Orbs = require(`${__dirname}/../orbs-client-sdk-javascript/dist/index.js`);
+const Orbs = require("orbs-client-sdk");
 
 function verifyResponse(response) {
     if (response.requestStatus != "COMPLETED" && response.executionResult != "SUCCESS" && response.transactionStatus != "COMMITTED") {

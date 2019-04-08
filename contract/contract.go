@@ -27,21 +27,21 @@ func _init() {
 }
 
 func sendMessageToChannel(channel string, message string) (messageID uint64) {
-	count := state.ReadUint64(COUNTER_KEY)
-	count++
-	state.WriteUint64(COUNTER_KEY, count)
-	state.WriteBytes([]byte("a_"+strconv.FormatUint(count, 10)), address.GetSignerAddress())
-	state.WriteString([]byte("m_"+strconv.FormatUint(count, 10)), message)
-	state.WriteUint64([]byte("t_"+strconv.FormatUint(count, 10)), env.GetBlockTimestamp())
-	return count
+	messageID = state.ReadUint64(COUNTER_KEY)
+	messageID++
+	state.WriteUint64(COUNTER_KEY, messageID)
+	state.WriteBytes(authorKey(messageID), address.GetSignerAddress())
+	state.WriteString(messageKey(messageID), message)
+	state.WriteUint64(timestampKey(messageID), env.GetBlockTimestamp())
+	return
 }
 
 func getMessagesForChannel(channel string, from uint64, to uint64) []byte {
-	count := state.ReadUint64(COUNTER_KEY)
+	lastMessageID := state.ReadUint64(COUNTER_KEY)
 	max := to
 
-	if to > count {
-		max = count
+	if to > lastMessageID {
+		max = lastMessageID
 	}
 
 	var messages []*Message
@@ -60,4 +60,16 @@ func getMessagesForChannel(channel string, from uint64, to uint64) []byte {
 
 func getLastMessageIdForChannel(channel string) uint64 {
 	return state.ReadUint64(COUNTER_KEY)
+}
+
+func authorKey(messageID uint64) []byte {
+	return []byte("a_" + strconv.FormatUint(messageID, 10))
+}
+
+func messageKey(messageID uint64) []byte {
+	return []byte("m_" + strconv.FormatUint(messageID, 10))
+}
+
+func timestampKey(messageID uint64) []byte {
+	return []byte("t_" + strconv.FormatUint(messageID, 10))
 }

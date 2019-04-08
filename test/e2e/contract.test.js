@@ -6,7 +6,7 @@
  * The above notice should be included in all copies or substantial portions of the software.
  */
 
-const Orbs = require("../../../orbs-client-sdk-javascript/dist/index.js");
+const Orbs = require("orbs-client-sdk");
 const GammaDriver = require("./gamma-driver");
 const fs = require("fs");
 const { Conversation } = require("../../index");

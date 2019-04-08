@@ -1,7 +1,7 @@
 const fs = require("fs");
 const _ = require("lodash");
-const Orbs = require(`${__dirname}/../orbs-client-sdk-javascript/dist/index.js`);
-const Chance = require('chance');
+const Orbs = require("orbs-client-sdk");
+const Sentencer = require('sentencer');
 const { Conversation } = require("./index");
 
 const sender = Orbs.createAccount();
@@ -35,7 +35,8 @@ const conversation = new Conversation({
 });
 
 setInterval(async () => {
-    const messageId = await conversation.sendMessageToChannel("myChannel", (new Chance().sentence({ words: 5 })));
+    const sentence = Sentencer.make("The {{ noun }} has {{ an_adjective }} {{ noun }}.");
+    const messageId = await conversation.sendMessageToChannel("myChannel", sentence);
     console.log(`Saved message with id ${messageId}`);
 }, 5000);
 
