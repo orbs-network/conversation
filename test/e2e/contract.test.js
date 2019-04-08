@@ -8,6 +8,7 @@
 
 const Orbs = require("../../../orbs-client-sdk-javascript/dist/index.js");
 const GammaDriver = require("./gamma-driver");
+const fs = require("fs");
 
 const VIRTUAL_CHAIN_ID = 42; // gamma-cli config default
 describe("E2E nodejs", () => {
@@ -100,5 +101,30 @@ describe("E2E nodejs", () => {
       error = e;
     }
     expect(error.toString()).toMatch("http request is not a valid membuffer");
+  });
+
+  test.only("Coversation", async () => {
+    // create sender account
+    const sender = Orbs.createAccount();
+
+    // create receiver account
+    const receiver = Orbs.createAccount();
+
+    // create client
+    const endpoint = gammeDriver.getEndpoint();
+    const client = new Orbs.Client(endpoint, VIRTUAL_CHAIN_ID, "TEST_NET");
+
+    // deploy contract tx
+    const code = new Uint8Array(fs.readFileSync(`${__dirname}/../../contract/contract.go`));
+    const [tx, txId] = client.createTransaction(sender.publicKey, sender.privateKey, "_Deployments", "deployService", [Orbs.argString("testContract"), Orbs.argUint32(1), Orbs.argBytes(code)]);
+
+    // send the transaction
+    const deployResponse = await client.sendTransaction(tx);
+    console.log("Transfer response:");
+    console.log(deployResponse);
+    expect(deployResponse.requestStatus).toEqual("COMPLETED");
+    expect(deployResponse.executionResult).toEqual("SUCCESS");
+    expect(deployResponse.transactionStatus).toEqual("COMMITTED");
+
   });
 });
