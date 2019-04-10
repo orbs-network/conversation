@@ -29,9 +29,9 @@ class Conversation {
     }
 
     async getMessagesForChannel(channel, from, to) {
-        const [tx] = this.client.createTransaction(this.credentials.publicKey, this.credentials.privateKey, this.config.contractName, "getMessagesForChannel", [this.Orbs.argString(channel), this.Orbs.argUint64(from), this.Orbs.argUint64(to)]);
+        const query = this.client.createQuery(this.credentials.publicKey, this.config.contractName, "getMessagesForChannel", [this.Orbs.argString(channel), this.Orbs.argUint64(from), this.Orbs.argUint64(to)]);
 
-        const response = await this.client.sendTransaction(tx);
+        const response = await this.client.sendQuery(query);
         verifyResponse(response);
 
         return JSON.parse(response.outputArguments[0].value);
