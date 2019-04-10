@@ -47,7 +47,7 @@ describe("E2E nodejs", () => {
     expect(deployResponse.executionResult).toEqual("SUCCESS");
     expect(deployResponse.transactionStatus).toEqual("COMMITTED");
 
-    const c = new Conversation({
+    const c = new Conversation(Orbs, {
       endpoint,
       virtualChainId: VIRTUAL_CHAIN_ID,
       contractName: "testContract"

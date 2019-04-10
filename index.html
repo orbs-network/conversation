@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
         <script src="./node_modules/orbs-client-sdk/dist/orbs-client-sdk.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bluebird@3.5.3/js/browser/bluebird.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/big-integer/1.6.43/BigInteger.min.js"></script>
         <script src="./index.js"></script>
         <script src="./app.js"></script>
+        <script>
+            const endpoint = `http://localhost:8080`;
+            const sender = Orbs.createAccount();
+            window.app = new App(Orbs, endpoint, {
+                publicKey: sender.publicKey,
+                privateKey: sender.privateKey
+            });
+            window.app.run();
+        </script>
         <style>
             #messages{
                 font-family: monospace;
@@ -17,7 +23,7 @@
     <body>
         <form>
             <textarea id="message_content" rows="10" cols=100></textarea>
-            <input type="button" onclick="javascript:send();" value="Send">
+            <input type="button" onclick="window.app.send()" value="Send">
         </form>
         <div id="messages">            
         </div>

@@ -1,7 +1,7 @@
-if (typeof(module) != "undefined") {
-    Promise = require("bluebird");
-    _ = require("lodash");
-    Orbs = require("orbs-client-sdk");
+async function delay(ms) {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, ms);
+    })
 }
 
 function verifyResponse(response) {
@@ -11,15 +11,16 @@ function verifyResponse(response) {
 }
 
 class Conversation {
-    constructor({ endpoint, virtualChainId, contractName }, { publicKey, privateKey }) {
+    constructor(Orbs, { endpoint, virtualChainId, contractName }, { publicKey, privateKey }) {
+        this.Orbs = Orbs;
         this.config = { endpoint, virtualChainId, contractName };
         this.credentials = { publicKey, privateKey };
 
-        this.client = new Orbs.Client(endpoint, virtualChainId, "TEST_NET");
+        this.client = new this.Orbs.Client(endpoint, virtualChainId, "TEST_NET");
     }
 
     async sendMessageToChannel(channel, message) {
-        const [tx] = this.client.createTransaction(this.credentials.publicKey, this.credentials.privateKey, this.config.contractName, "sendMessageToChannel", [Orbs.argString(channel), Orbs.argString(message)]);
+        const [tx] = this.client.createTransaction(this.credentials.publicKey, this.credentials.privateKey, this.config.contractName, "sendMessageToChannel", [this.Orbs.argString(channel), this.Orbs.argString(message)]);
 
         const response = await this.client.sendTransaction(tx);
         verifyResponse(response);
@@ -28,7 +29,7 @@ class Conversation {
     }
 
     async getMessagesForChannel(channel, from, to) {
-        const [tx] = this.client.createTransaction(this.credentials.publicKey, this.credentials.privateKey, this.config.contractName, "getMessagesForChannel", [Orbs.argString(channel), Orbs.argUint64(from), Orbs.argUint64(to)]);
+        const [tx] = this.client.createTransaction(this.credentials.publicKey, this.credentials.privateKey, this.config.contractName, "getMessagesForChannel", [this.Orbs.argString(channel), this.Orbs.argUint64(from), this.Orbs.argUint64(to)]);
 
         const response = await this.client.sendTransaction(tx);
         verifyResponse(response);
@@ -41,15 +42,15 @@ class Conversation {
         while (true) {
             try {
                 const messages = await this.getMessagesForChannel(channel, firstItem, firstItem+50);
-                if (!_.isEmpty(messages)) {
+                if (messages && messages.length > 0) {
                     callback(messages);
-                    firstItem = _.last(messages).ID + 1;
+                    firstItem = messages[messages.length - 1].ID + 1;
                 }
             } catch (e) {
                 console.log(e);
             }
 
-            await Promise.delay(200);
+            await delay(200);
         }
     }
 }
