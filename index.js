@@ -1,7 +1,8 @@
-
-// const Promise = require("bluebird");
-// const _ = require("lodash");
-// const Orbs = require("orbs-client-sdk");
+if (typeof(module) != "undefined") {
+    Promise = require("bluebird");
+    _ = require("lodash");
+    Orbs = require("orbs-client-sdk");
+}
 
 function verifyResponse(response) {
     if (response.requestStatus != "COMPLETED" && response.executionResult != "SUCCESS" && response.transactionStatus != "COMMITTED") {
@@ -53,6 +54,8 @@ class Conversation {
     }
 }
 
-module.exports = {
-    Conversation
-};
+if (typeof(module) != "undefined") {
+    module.exports = {
+        Conversation
+    };
+}
