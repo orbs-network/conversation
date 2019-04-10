@@ -9,13 +9,24 @@
     <script src="./index.js"></script>
     <script src="./app.js"></script>
     <script>
-        const endpoint = `http://localhost:8080`;
-        const sender = Orbs.createAccount();
-        window.app = new App(Orbs, endpoint, "orbs", {
-            publicKey: sender.publicKey,
-            privateKey: sender.privateKey,
-            address: sender.address
-        });
+        function getSender() {
+            if (!localStorage.getItem("sender_public_key")) {
+                const sender = Orbs.createAccount();
+                localStorage.setItem("sender_public_key", Orbs.encodeHex(sender.publicKey));
+                localStorage.setItem("sender_private_key", Orbs.encodeHex(sender.privateKey));
+                localStorage.setItem("sender_address", sender.address);
+            }
+
+            return {
+                publicKey: Orbs.decodeHex(localStorage.getItem("sender_public_key")),
+                privateKey: Orbs.decodeHex(localStorage.getItem("sender_private_key")),
+                address: localStorage.getItem("sender_address")
+            }
+        }
+
+        const endpoint = "http://localhost:8080";
+        const channel = "orbs";
+        window.app = new App(Orbs, endpoint, "orbs", getSender());
         window.app.run();
     </script>
     <style>
