@@ -32,7 +32,7 @@ class Conversation {
         const response = await this.client.sendTransaction(tx);
         verifyResponse(response);
 
-        return JSON.parse(Buffer.from(response.outputArguments[0].value).toString());
+        return JSON.parse(response.outputArguments[0].value);
     }
 
     async scroll(channel, from, callback) {

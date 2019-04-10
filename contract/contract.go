@@ -36,7 +36,7 @@ func sendMessageToChannel(channel string, message string) (messageID uint64) {
 	return
 }
 
-func getMessagesForChannel(channel string, from uint64, to uint64) []byte {
+func getMessagesForChannel(channel string, from uint64, to uint64) string {
 	lastMessageID := state.ReadUint64(COUNTER_KEY)
 	max := to
 
@@ -55,7 +55,7 @@ func getMessagesForChannel(channel string, from uint64, to uint64) []byte {
 	}
 
 	data, _ := json.Marshal(messages)
-	return data
+	return string(data)
 }
 
 func getLastMessageIdForChannel(channel string) uint64 {
