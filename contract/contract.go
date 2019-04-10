@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"strconv"
 
@@ -13,31 +14,29 @@ import (
 var PUBLIC = sdk.Export(sendMessageToChannel, getMessagesForChannel, getLastMessageIdForChannel)
 var SYSTEM = sdk.Export(_init)
 
-var COUNTER_KEY = []byte("count")
-
 type Message struct {
 	ID        uint64
 	Timestamp uint64
-	Author    []byte
+	Author    string
 	Message   string
 }
 
 func _init() {
-	state.WriteUint64(COUNTER_KEY, 0)
+
 }
 
 func sendMessageToChannel(channel string, message string) (messageID uint64) {
-	messageID = state.ReadUint64(COUNTER_KEY)
+	messageID = state.ReadUint64(counterKey(channel))
 	messageID++
-	state.WriteUint64(COUNTER_KEY, messageID)
-	state.WriteBytes(authorKey(messageID), address.GetSignerAddress())
-	state.WriteString(messageKey(messageID), message)
-	state.WriteUint64(timestampKey(messageID), env.GetBlockTimestamp())
+	state.WriteUint64(counterKey(channel), messageID)
+	state.WriteBytes(authorKey(channel, messageID), address.GetSignerAddress())
+	state.WriteString(messageKey(channel, messageID), message)
+	state.WriteUint64(timestampKey(channel, messageID), env.GetBlockTimestamp())
 	return
 }
 
 func getMessagesForChannel(channel string, from uint64, to uint64) string {
-	lastMessageID := state.ReadUint64(COUNTER_KEY)
+	lastMessageID := state.ReadUint64(counterKey(channel))
 	max := to
 
 	if to > lastMessageID {
@@ -45,12 +44,12 @@ func getMessagesForChannel(channel string, from uint64, to uint64) string {
 	}
 
 	var messages []*Message
-	for i := from; i <= max; i++ {
+	for i := uint64(from); i <= max; i++ {
 		messages = append(messages, &Message{
 			i,
-			state.ReadUint64([]byte("t_" + strconv.FormatUint(i, 10))),
-			state.ReadBytes([]byte("a_" + strconv.FormatUint(i, 10))),
-			state.ReadString([]byte("m_" + strconv.FormatUint(i, 10))),
+			state.ReadUint64(timestampKey(channel, i)),
+			hex.EncodeToString(state.ReadBytes(authorKey(channel, i))),
+			state.ReadString(messageKey(channel, i)),
 		})
 	}
 
@@ -59,17 +58,21 @@ func getMessagesForChannel(channel string, from uint64, to uint64) string {
 }
 
 func getLastMessageIdForChannel(channel string) uint64 {
-	return state.ReadUint64(COUNTER_KEY)
+	return state.ReadUint64(counterKey(channel))
 }
 
-func authorKey(messageID uint64) []byte {
-	return []byte("a_" + strconv.FormatUint(messageID, 10))
+func authorKey(channel string, messageID uint64) []byte {
+	return []byte("a_" + channel + "_" + strconv.FormatUint(messageID, 10))
 }
 
-func messageKey(messageID uint64) []byte {
-	return []byte("m_" + strconv.FormatUint(messageID, 10))
+func messageKey(channel string, messageID uint64) []byte {
+	return []byte("m_" + channel + "_" + strconv.FormatUint(messageID, 10))
 }
 
-func timestampKey(messageID uint64) []byte {
-	return []byte("t_" + strconv.FormatUint(messageID, 10))
+func timestampKey(channel string, messageID uint64) []byte {
+	return []byte("t_" + channel + "_" + strconv.FormatUint(messageID, 10))
+}
+
+func counterKey(channel string) []byte {
+	return []byte("count_" + channel)
 }

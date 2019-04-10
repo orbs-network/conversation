@@ -25,7 +25,7 @@ const endpoint = `http://localhost:8080`;
     
 })();
 
-const conversation = new Conversation({
+const conversation = new Conversation(Orbs, {
     endpoint,
     virtualChainId: 42,
     contractName: "testContract"

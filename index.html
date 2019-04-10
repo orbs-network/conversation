@@ -1,31 +1,54 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src="./node_modules/orbs-client-sdk/dist/orbs-client-sdk.js"></script>
-        <script src="./index.js"></script>
-        <script src="./app.js"></script>
-        <script>
-            const endpoint = `http://localhost:8080`;
-            const sender = Orbs.createAccount();
-            window.app = new App(Orbs, endpoint, {
-                publicKey: sender.publicKey,
-                privateKey: sender.privateKey
-            });
-            window.app.run();
-        </script>
-        <style>
-            #messages{
-                font-family: monospace;
-                white-space: pre;
-            }
-        </style>
-    </head>
-    <body>
-        <form>
-            <textarea id="message_content" rows="10" cols=100></textarea>
-            <input type="button" onclick="window.app.send()" value="Send">
-        </form>
-        <div id="messages">            
+
+<head>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="http://cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="http://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+    <script src="./node_modules/orbs-client-sdk/dist/orbs-client-sdk.js"></script>
+    <script src="./index.js"></script>
+    <script src="./app.js"></script>
+    <script>
+        const endpoint = `http://localhost:8080`;
+        const sender = Orbs.createAccount();
+        window.app = new App(Orbs, endpoint, "orbs", {
+            publicKey: sender.publicKey,
+            privateKey: sender.privateKey,
+            address: sender.address
+        });
+        window.app.run();
+    </script>
+    <style>
+        #messages {
+            font-family: monospace;
+            white-space: pre;
+        }
+    </style>
+</head>
+
+<body onload="window.app.showInfo()">
+    <main class="wrapper">
+        <nav class="navigation">
+            <section class="container">
+                <a class="navigation-title" href="#message_form">
+                    <h1 class="title">Conversation</h1>
+                    <span>#<span id="channel"></span></span>
+                    <span>as <span id="public_key"></span></span>
+                </a>
+            </section>
+        </nav>
+        <div id="messages" class="container">
         </div>
-    </body>
+        <div class="container" id="message_form">
+            <br/>
+            <form>
+                <fieldset>
+                    <textarea id="message_content" rows="10" placeholder="What's up?" onkeydown="window.app.submitOnEnter(event)"></textarea>
+                    <input type="button" onclick="window.app.submitForm();" value="Send">
+                </fieldset>
+            </form>
+        </div>
+    </main>
+</body>
+
 </html>
