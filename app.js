@@ -1,10 +1,10 @@
 class App {
-    constructor(Orbs, endpoint, channel, { publicKey, privateKey, address }) {
+    constructor(Orbs, { endpoint, virtualChainId, contractName, channel }, { publicKey, privateKey, address }) {
         this.channel = channel;
         this.conversation = new Conversation(Orbs, {
             endpoint,
-            virtualChainId: 42,
-            contractName: "testContract"
+            virtualChainId,
+            contractName
         }, {
             publicKey,
             privateKey

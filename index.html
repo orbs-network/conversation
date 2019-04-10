@@ -24,9 +24,21 @@
             }
         }
 
-        const endpoint = "http://localhost:8080";
-        const channel = "orbs";
-        window.app = new App(Orbs, endpoint, "orbs", getSender());
+        // Local settings
+        // const params = {
+        //     endpoint: "http://localhost:8080",
+        //     virtualChainId: 42,
+        //     contractName: "testContract",
+        //     channel: "orbs"
+        // };
+
+        const params = {
+            endpoint: "http://52.37.172.206/vchains/2013",
+            virtualChainId: 2013,
+            contractName: "testContract",
+            channel: "orbs"
+        };
+        window.app = new App(Orbs, params, getSender());
         window.app.run();
     </script>
     <style>
