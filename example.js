@@ -38,7 +38,7 @@ setInterval(async () => {
     const sentence = Sentencer.make("The {{ noun }} has {{ an_adjective }} {{ noun }}.");
     const messageId = await conversation.sendMessageToChannel("myChannel", sentence);
     console.log(`Saved message with id ${messageId}`);
-}, 5000);
+}, 1000);
 
 conversation.scroll("myChannel", 1, (messages) => {
     for (m of messages) {

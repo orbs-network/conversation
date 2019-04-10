@@ -1,7 +1,7 @@
 
-const Promise = require("bluebird");
-const _ = require("lodash");
-const Orbs = require("orbs-client-sdk");
+// const Promise = require("bluebird");
+// const _ = require("lodash");
+// const Orbs = require("orbs-client-sdk");
 
 function verifyResponse(response) {
     if (response.requestStatus != "COMPLETED" && response.executionResult != "SUCCESS" && response.transactionStatus != "COMMITTED") {
@@ -48,7 +48,7 @@ class Conversation {
                 console.log(e);
             }
 
-            await Promise.delay(2000);
+            await Promise.delay(200);
         }
     }
 }
