@@ -1,5 +1,5 @@
 class App {
-    constructor(Orbs, { endpoint, virtualChainId, contractName, channel }, { publicKey, privateKey, address }) {
+    constructor(Orbs, { endpoint, prismEndpoint, virtualChainId, contractName, channel }, { publicKey, privateKey, address }) {
         this.channel = channel;
         this.conversation = new Conversation(Orbs, {
             endpoint,
@@ -11,6 +11,9 @@ class App {
         });
 
         this.address = address;
+        this.virtualChainId = virtualChainId;
+        this.prismEndpoint = prismEndpoint;
+        this.contractName = contractName;
     }
 
     async send(text) {
@@ -25,9 +28,10 @@ class App {
                 const container = document.getElementById("messages");
                 const date = (new Date(m.Timestamp/1000000).toISOString()).substr(11, 12);
                 const author = m.Author.substr(0, 6);
+                const prismLink = `${this.prismEndpoint}/vchains/${this.virtualChainId}/block/${m.BlockHeight}`;
                 const row = document.createElement("div");
                 row.classList = ["row"];
-                row.innerHTML = `<div class="column column-20">${date} <strong title="0x${m.Author}">${author}</strong>:</div><div class="column column-90">${m.Message}</div>`;
+                row.innerHTML = `<div class="column column-20"><a href="${prismLink}" target="_blank">${date}</a> <strong title="0x${m.Author}">${author}</strong>:</div><div class="column column-90">${m.Message}</div>`;
 
                 container.appendChild(row, container.childNodes[0]);
             }
@@ -50,8 +54,13 @@ class App {
         return false;
     }
 
-    showInfo(element) {
-        document.getElementById("public_key").innerHTML = this.address;
-        document.getElementById("channel").innerHTML = this.channel;
+    showInfo() {
+        this.setElementValue("address", this.address);
+        this.setElementValue("channel", this.channel);
+        this.setElementValue("contract_name", this.contractName);
+    }
+
+    setElementValue(id, value) {
+        document.getElementById(id).innerHTML = value;
     }
 }

@@ -15,10 +15,11 @@ var PUBLIC = sdk.Export(sendMessageToChannel, getMessagesForChannel, getLastMess
 var SYSTEM = sdk.Export(_init)
 
 type Message struct {
-	ID        uint64
-	Timestamp uint64
-	Author    string
-	Message   string
+	ID          uint64
+	Timestamp   uint64
+	Author      string
+	Message     string
+	BlockHeight uint64
 }
 
 func _init() {
@@ -32,6 +33,7 @@ func sendMessageToChannel(channel string, message string) (messageID uint64) {
 	state.WriteBytes(authorKey(channel, messageID), address.GetSignerAddress())
 	state.WriteString(messageKey(channel, messageID), message)
 	state.WriteUint64(timestampKey(channel, messageID), env.GetBlockTimestamp())
+	state.WriteUint64(blockKey(channel, messageID), env.GetBlockHeight())
 	return
 }
 
@@ -50,6 +52,7 @@ func getMessagesForChannel(channel string, from uint64, to uint64) string {
 			state.ReadUint64(timestampKey(channel, i)),
 			hex.EncodeToString(state.ReadBytes(authorKey(channel, i))),
 			state.ReadString(messageKey(channel, i)),
+			state.ReadUint64(blockKey(channel, i)),
 		})
 	}
 
@@ -75,4 +78,8 @@ func timestampKey(channel string, messageID uint64) []byte {
 
 func counterKey(channel string) []byte {
 	return []byte("count_" + channel)
+}
+
+func blockKey(channel string, messageID uint64) []byte {
+	return []byte("b_" + channel + "_" + strconv.FormatUint(messageID, 10))
 }

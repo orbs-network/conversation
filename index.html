@@ -25,19 +25,21 @@
         }
 
         // Local settings
-        const params = {
-            endpoint: "http://localhost:8080",
-            virtualChainId: 42,
-            contractName: "testContract",
-            channel: "orbs"
-        };
-
         // const params = {
-        //     endpoint: "http://52.37.172.206/vchains/2013",
-        //     virtualChainId: 2013,
-        //     contractName: "testContract",
-        //     channel: "orbs"
+        //     endpoint: "http://localhost:8080",
+        //     virtualChainId: 42,
+        //     contractName: "orbs_conversation",
+        //     channel: "orbs",
+        //     prismEndpoint: "https://prism.orbs-test.com"
         // };
+
+        const params = {
+            endpoint: "http://52.37.172.206/vchains/2013",
+            virtualChainId: 2013,
+            contractName: "orbs_conversation",
+            channel: "orbs",
+            prismEndpoint: "https://prism.orbs-test.com"
+        };
         window.app = new App(Orbs, params, getSender());
         window.app.run();
     </script>
@@ -56,7 +58,8 @@
                 <a class="navigation-title" href="#message_form">
                     <h1 class="title">Conversation</h1>
                     <span>#<span id="channel"></span></span>
-                    <span>as <span id="public_key"></span></span>
+                    <span>as <span id="address"></span></span>,
+                    <span>contract <span id="contract_name"></span></span>
                 </a>
             </section>
         </nav>
