@@ -10,9 +10,12 @@ const App = ({
   contractName,
   channel,
   nodeAddress,
-  virtualChainId
+  virtualChainId,
+  prismAddress,
+  address
 }) => {
   const [messages, setMessages] = useState({});
+
   const orbsClient = new Client(
     `${nodeAddress}/vchains/${virtualChainId}`,
     virtualChainId,
@@ -48,8 +51,10 @@ const App = ({
       const messages = JSON.parse(response.outputArguments[0].value);
       setMessages(
         messages.reduce((acc, curr) => {
-          acc[curr.ID] = curr;
-          acc[curr.ID].id = curr.ID;
+          if (curr.ID !== 0) {
+            acc[curr.ID] = curr;
+            acc[curr.ID].id = curr.ID;
+          }
           return acc;
         }, {})
       );
@@ -75,6 +80,7 @@ const App = ({
 
   useEffect(() => {
     fetchMessages();
+    setInterval(fetchMessages, 2 * 1000);
   }, []);
 
   return (
@@ -82,9 +88,14 @@ const App = ({
       <nav className="navigation">
         <section className="container">
           <h1 className="title">Conversation App</h1>
+          <div>your address: {address}</div>
+          <div>channel: {channel}</div>
         </section>
       </nav>
-      <Messages messages={messages} />
+      <Messages
+        prismUrl={`${prismAddress}vchains/${virtualChainId}`}
+        messages={messages}
+      />
       <MessageInput onSend={submitMessage} />
     </main>
   );

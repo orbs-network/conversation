@@ -20,7 +20,7 @@ const config = {
   virtualChainId: 2013,
   contractName: 'orbs_conversation',
   channel: 'orbs',
-  prismUrl: 'https://prism.orbs-test.com'
+  prismAddress: 'https://prism.orbs-test.com/'
 };
 
 if (!localStorage.getItem(SENDER_PUBLIC_KEY)) {

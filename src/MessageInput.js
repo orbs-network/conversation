@@ -4,12 +4,15 @@ const MessageInput = ({ onSend }) => {
   const [message, setMessage] = useState('');
 
   const sendAndClean = () => {
-    onSend(message);
-    setMessage('');
+    if (message) {
+      onSend(message);
+      setMessage('');
+    }
   };
 
   return (
     <>
+      <br />
       <textarea
         rows="15"
         placeholder="What's up?"
