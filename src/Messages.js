@@ -16,7 +16,9 @@ const Messages = ({ messages, prismUrl }) => {
                 {date}
               </a>{' '}
             </div>
-            <strong className="column column-10" title={`0x${m.Author}`}>{author}:</strong>
+            <strong className="column column-10" title={`0x${m.Author}`}>
+              {author}:
+            </strong>
             <div className="column column-90">{m.Message}</div>
           </div>
         );

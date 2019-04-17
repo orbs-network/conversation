@@ -32,7 +32,8 @@ const App = ({
     }
   };
 
-  const messagesCursor = 0;
+  let messagesCursor = 0;
+  const cursorLength = 5;
 
   const fetchMessages = async () => {
     const query = orbsClient.createQuery(
@@ -42,22 +43,24 @@ const App = ({
       [
         argString(channel),
         argUint64(messagesCursor),
-        argUint64(messagesCursor + 50)
+        argUint64(messagesCursor + cursorLength)
       ]
     );
     try {
       const response = await orbsClient.sendQuery(query);
       verifyResponse(response);
-      const messages = JSON.parse(response.outputArguments[0].value);
-      setMessages(
-        messages.reduce((acc, curr) => {
+      const data = JSON.parse(response.outputArguments[0].value);
+      if (data && data.length) {
+        messagesCursor += cursorLength;
+        const newMessages = data.reduce((acc, curr) => {
           if (curr.ID !== 0) {
             acc[curr.ID] = curr;
             acc[curr.ID].id = curr.ID;
           }
           return acc;
-        }, {})
-      );
+        }, messages);
+        setMessages({...newMessages});
+      }
     } catch (err) {
       console.log(err);
     }

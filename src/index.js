@@ -16,7 +16,7 @@ const config = {
   publicKey: '',
   privateKey: '',
   address: '',
-  nodeAddress: 'http://52.37.172.206/',
+  nodeAddress: 'http://validator.orbs-test.com/',
   virtualChainId: 2013,
   contractName: 'orbs_conversation',
   channel: 'orbs',
