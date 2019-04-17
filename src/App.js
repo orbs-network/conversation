@@ -6,6 +6,7 @@ import MessageInput from './MessageInput';
 
 const App = ({
   publicKey,
+  privateKey,
   contractName,
   channel,
   nodeAddress,
@@ -57,9 +58,20 @@ const App = ({
     }
   };
 
-  const onSendHandler = (text) => {
-    console.log(text);
-  }
+  const submitMessage = async text => {
+    const [tx] = orbsClient.createTransaction(
+      publicKey,
+      privateKey,
+      contractName,
+      'sendMessageToChannel',
+      [argString(channel), argString(text)]
+    );
+
+    const response = await orbsClient.sendTransaction(tx);
+    verifyResponse(response);
+
+    console.log(response.outputArguments[0].value);
+  };
 
   useEffect(() => {
     fetchMessages();
@@ -73,7 +85,7 @@ const App = ({
         </section>
       </nav>
       <Messages messages={messages} />
-      <MessageInput onSend={onSendHandler} />
+      <MessageInput onSend={submitMessage} />
     </main>
   );
 };
