@@ -1,11 +1,3 @@
-/**
- * Copyright 2019 the orbs-client-sdk-javascript authors
- * This file is part of the orbs-client-sdk-javascript library in the Orbs project.
- *
- * This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
- * The above notice should be included in all copies or substantial portions of the software.
- */
-
 const util = require('util');
 const execFile = util.promisify(require('child_process').execFile);
 
@@ -35,6 +27,25 @@ class GammaDriver {
       }
     } catch (e) {
       console.error('Unable to run start gamma-cli');
+    }
+  }
+
+  async deployContract(name, path) {
+    try {
+      const { stdout, stderr } = await execFile('gamma-cli', [
+        'deploy',
+        path,
+        '-name',
+        name,
+        '-signer',
+        'user1'
+      ]);
+      console.log(stdout);
+      if (stderr) {
+        console.error(stderr);
+      }
+    } catch (e) {
+      console.error(`Unable to deploy contract ${name}`);
     }
   }
 
