@@ -9,15 +9,15 @@ const App = ({
   privateKey,
   contractName,
   channel,
-  nodeAddress,
+  nodeUrl,
   virtualChainId,
-  prismAddress,
+  prismUrl,
   address
 }) => {
   const [messages, setMessages] = useState({});
 
   const orbsClient = new Client(
-    `${nodeAddress}/vchains/${virtualChainId}`,
+    `${nodeUrl}`,
     virtualChainId,
     'TEST_NET'
   );
@@ -51,7 +51,7 @@ const App = ({
       verifyResponse(response);
       const data = JSON.parse(response.outputArguments[0].value);
       if (data && data.length) {
-        messagesCursor += cursorLength;
+        messagesCursor += data.length;
         const newMessages = data.reduce((acc, curr) => {
           if (curr.ID !== 0) {
             acc[curr.ID] = curr;
@@ -81,9 +81,11 @@ const App = ({
     console.log(response.outputArguments[0].value);
   };
 
+  const REFRESH_RATE = 1* 1000;
+
   useEffect(() => {
     fetchMessages();
-    setInterval(fetchMessages, 2 * 1000);
+    setInterval(fetchMessages, REFRESH_RATE);
   }, []);
 
   return (
@@ -96,7 +98,7 @@ const App = ({
         </section>
       </nav>
       <Messages
-        prismUrl={`${prismAddress}vchains/${virtualChainId}`}
+        prismUrl={prismUrl}
         messages={messages}
       />
       <MessageInput onSend={submitMessage} />

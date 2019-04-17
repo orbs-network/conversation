@@ -12,15 +12,14 @@ const SENDER_PUBLIC_KEY = 'sender_public_key';
 const SENDER_PRIVATE_KEY = 'sender_private_key';
 const SENDER_ADDRESS = 'sender_address';
 
+const virtualChainId = 2013;
+
 const config = {
-  publicKey: '',
-  privateKey: '',
-  address: '',
-  nodeAddress: 'http://validator.orbs-test.com/',
-  virtualChainId: 2013,
+  nodeUrl: `http://validator.orbs-test.com/vchains/${virtualChainId}`,
+  virtualChainId,
   contractName: 'orbs_conversation',
   channel: 'orbs',
-  prismAddress: 'https://prism.orbs-test.com/'
+  prismUrl: `https://prism.orbs-test.com/vchains/${virtualChainId}`
 };
 
 if (!localStorage.getItem(SENDER_PUBLIC_KEY)) {
