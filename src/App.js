@@ -16,11 +16,7 @@ const App = ({
 }) => {
   const [messages, setMessages] = useState({});
 
-  const orbsClient = new Client(
-    `${nodeUrl}`,
-    virtualChainId,
-    'TEST_NET'
-  );
+  const orbsClient = new Client(`${nodeUrl}`, virtualChainId, 'TEST_NET');
 
   const verifyResponse = response => {
     if (
@@ -28,6 +24,7 @@ const App = ({
       response.executionResult !== 'SUCCESS' &&
       response.transactionStatus !== 'COMMITTED'
     ) {
+      console.error(response);
       throw new Error(response);
     }
   };
@@ -59,7 +56,7 @@ const App = ({
           }
           return acc;
         }, messages);
-        setMessages({...newMessages});
+        setMessages({ ...newMessages });
       }
     } catch (err) {
       console.log(err);
@@ -81,7 +78,7 @@ const App = ({
     console.log(response.outputArguments[0].value);
   };
 
-  const REFRESH_RATE = 1* 1000;
+  const REFRESH_RATE = 1 * 1000;
 
   useEffect(() => {
     fetchMessages();
@@ -97,10 +94,7 @@ const App = ({
           <div>channel: {channel}</div>
         </section>
       </nav>
-      <Messages
-        prismUrl={prismUrl}
-        messages={messages}
-      />
+      <Messages prismUrl={prismUrl} messages={messages} />
       <MessageInput onSend={submitMessage} />
     </main>
   );

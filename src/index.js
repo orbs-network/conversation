@@ -12,10 +12,13 @@ const SENDER_PUBLIC_KEY = 'sender_public_key';
 const SENDER_PRIVATE_KEY = 'sender_private_key';
 const SENDER_ADDRESS = 'sender_address';
 
-const virtualChainId = 2013;
+const virtualChainId = process.env.REACT_APP_VIRTUAL_CHAIN_ID || 42;
 
 const config = {
-  nodeUrl: `http://validator.orbs-test.com/vchains/${virtualChainId}`,
+  nodeUrl:
+    process.env.NODE_ENV === 'production'
+      ? `${process.env.REACT_APP_ORBS_NODE_ADDRESS}/vchains/${virtualChainId}`
+      : process.env.REACT_APP_ORBS_NODE_ADDRESS,
   virtualChainId,
   contractName: 'orbs_conversation',
   channel: 'orbs',

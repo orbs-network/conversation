@@ -1,20 +1,22 @@
 {
   "name": "conversation",
+  "homepage": "https://orbs-network.github.io/conversation",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "gh-pages": "^2.0.1",
     "orbs-client-sdk": "0.0.6",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "2.1.8"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "REACT_APP_ORBS_NODE_ADDRESS=http://localhost:8080 react-scripts start",
+    "build": "REACT_APP_ORBS_NODE_ADDRESS=https://validator.orbs-test.com REACT_APP_VIRTUAL_CHAIN_ID=2013 react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "prettier --single-quote --write '**/*.js'"
+    "lint": "prettier --single-quote --write './src/**/*.js'",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -26,6 +28,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "gh-pages": "^2.0.1",
     "prettier": "^1.17.0"
   }
 }
