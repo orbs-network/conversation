@@ -1,20 +1,34 @@
 {
   "name": "conversation",
-  "version": "0.0.1",
-  "description": "Chat app on top of ORBS blockchain",
-  "main": "index.js",
-  "author": "Kirill Maksimov <kirill@orbs.com>",
-  "license": "MIT",
-  "scripts": {
-    "test": "./node_modules/.bin/jest"
-  },
+  "homepage": "https://orbs-network.github.io/conversation",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "bluebird": "^3.5.4",
-    "lodash": "^4.17.11",
-    "orbs-client-sdk": "^0.0.6",
-    "sentencer": "^0.2.0"
+    "orbs-client-sdk": "0.0.6",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "2.1.8"
   },
+  "scripts": {
+    "start": "REACT_APP_ORBS_NODE_ADDRESS=http://localhost:8080 react-scripts start",
+    "build": "REACT_APP_ORBS_NODE_ADDRESS=https://validator.orbs-test.com REACT_APP_VIRTUAL_CHAIN_ID=2013 react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "prettier --single-quote --write './src/**/*.js'",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "devDependencies": {
-    "jest": "^24.7.1"
+    "gh-pages": "^2.0.1",
+    "prettier": "^1.17.0"
   }
 }
