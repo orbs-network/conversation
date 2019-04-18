@@ -1,8 +1,8 @@
 import './App.css';
 import Messages from './Messages';
+import MessageInput from './MessageInput';
 import React, { useEffect, useState } from 'react';
 import { Client, argString, argUint64 } from 'orbs-client-sdk/dist/index.es';
-import MessageInput from './MessageInput';
 
 const App = ({
   publicKey,
@@ -29,7 +29,7 @@ const App = ({
     }
   };
 
-  let messagesCursor = 0;
+  let messagesCursor = 1;
   const cursorLength = 5;
 
   const fetchMessages = async () => {
@@ -50,10 +50,8 @@ const App = ({
       if (data && data.length) {
         messagesCursor += data.length;
         const newMessages = data.reduce((acc, curr) => {
-          if (curr.ID !== 0) {
-            acc[curr.ID] = curr;
-            acc[curr.ID].id = curr.ID;
-          }
+          acc[curr.ID] = curr;
+          acc[curr.ID].id = curr.ID;
           return acc;
         }, messages);
         setMessages({ ...newMessages });
