@@ -14,3 +14,6 @@
 1. Deploy the contract `gamma-cli deploy ./contract/contract.go -name orbs_conversation -signer user1`
 1. Launch static server `npm start`
 1. Go to [http://localhost:3000](http://localhost:3000)
+
+## License
+MIT.
