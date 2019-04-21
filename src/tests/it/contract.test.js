@@ -38,11 +38,7 @@ describe('Contract Integration', () => {
       publicKey,
       contractName,
       'getMessagesForChannel',
-      [
-        Orbs.argString('test-channel'),
-        Orbs.argUint64(0),
-        Orbs.argUint64(5)
-      ]
+      [Orbs.argString('test-channel'), Orbs.argUint64(0), Orbs.argUint64(5)]
     );
 
     const response = await client.sendQuery(query);
