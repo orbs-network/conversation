@@ -90,6 +90,16 @@ const App = ({
           <h1 className="title">Conversation App</h1>
           <div>your address: {address}</div>
           <div>channel: {channel}</div>
+          <div>
+            contract:{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`${prismUrl}/contract/${contractName}`}
+            >
+              {contractName}
+            </a>
+          </div>
         </section>
       </nav>
       <Messages prismUrl={prismUrl} messages={messages} />
